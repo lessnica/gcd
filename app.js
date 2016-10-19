@@ -166,7 +166,7 @@ function deleteTask (taskId, callback) {
 }
 // [END delete_entity]
 
-
+/*
 const router = express.Router();
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -230,3 +230,5 @@ router.post('/add', upload.single('spawns'), function(req, res, next) {
     res.status(401).json({ status: 'failure', message: 'Access not authorised' });
 }
 });
+
+    */
