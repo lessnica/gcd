@@ -5,6 +5,7 @@
   "license": "Apache Version 2.0",
   "author": "Google Inc.",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha -R spec -t 120000 --require intelli-espower-loader ../test/_setup.js test/*.test.js",
     "system-test": "mocha -R spec -t 120000 --require intelli-espower-loader ../system-test/_setup.js system-test/*.test.js"
   },
