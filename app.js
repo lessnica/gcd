@@ -82,8 +82,8 @@ function addTask (description, callback) {
     });
 }
 //my code
-addTask ('testik3', function(err) {
-    console.log(err,'Updated bing');
+addTask ('testik4', function(err) {
+    console.log(err,'Updated bing2');
 });
 // [END add_entity]
 
