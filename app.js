@@ -83,7 +83,7 @@ function addTask (description, callback) {
 }
 //my code
 addTask ('testik3', function(err) {
-    console.log(err,'bing');
+    console.log(err,'Updated bing');
 });
 // [END add_entity]
 
