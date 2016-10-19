@@ -165,3 +165,68 @@ function deleteTask (taskId, callback) {
     });
 }
 // [END delete_entity]
+
+
+const router = express.Router();
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+const csv = require('csv');
+const eachLimit = require('async/eachLimit');
+function add(data, cb) {
+    let q = datastore.createQuery([kind])
+        .filter('key', '=', data.key);
+
+    datastore.runQuery(q, function(err, entities, nextQuery) {
+        if (err) {
+            cb(err);
+        } else if (entities.length == 0) {
+            create(data, cb);
+        } else {
+            update(entities[0].key.id, data, cb);
+        }
+    });
+}
+
+router.post('/add', upload.single('spawns'), function(req, res, next) {
+    if (req.query.key) {
+        if (req.file) {
+            csv.parse(req.file.buffer, function(err, data) {
+                if (err) {
+                    res.status(400).json({ status: 'failure', message: 'Unable to parse file' });
+                } else {
+                    req.setTimeout(6000000);
+                    data.shift();
+                    var added = 0;
+                    eachLimit(data, 500, (item, cb) => {
+                        spawns.add({
+                            cell: item[0],
+                            key: item[1],
+                            latitude: parseFloat(item[2]),
+                            longitude: parseFloat(item[3]),
+                            interval: parseInt(item[4]),
+                            frequency: parseInt(item[5])
+                        }, (err) => {
+                        if (!err) {
+                        added++;
+                        if (added % 10000 == 0)
+                            console.log(added)
+                    }
+                    cb(err);
+                });
+            }, (err) => {
+                if (err) {
+                res.status(500).json({ status: 'failure', added: added, total: data.length, error: err });
+            } else {
+                res.json({ status: 'success', added: added, total: data.length, percentage: added / data.length });
+            }
+        });
+    }
+});
+} else {
+    res.status(400).json({ status: 'failure', message: 'No file passed through' });
+}
+} else {
+    res.status(401).json({ status: 'failure', message: 'Access not authorised' });
+}
+});
